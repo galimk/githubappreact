@@ -10,6 +10,7 @@
     "redux-logger": "^3.0.6"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "humps": "^2.0.0",
     "jest-cli": "^20.0.4",
     "lodash": "^4.16.1",
