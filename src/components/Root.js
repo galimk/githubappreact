@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {validateToken, logOut} from '../actions';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
+import RepoDetails from './RepoDetails';
 
 import createHistory from 'history/createBrowserHistory'
 import {ConnectedRouter} from 'react-router-redux'
@@ -24,7 +25,7 @@ class Root extends Component {
                         <div className="row">
                             <Route exact path="/" component={Dashboard}/>
                             <Route exact path="/:org_name" component={Dashboard}/>
-                            <Route path="/repo-details" component={RepoDetailsPage}/>
+
                         </div>
                     </div>
                 </ConnectedRouter>
@@ -32,8 +33,6 @@ class Root extends Component {
         );
     }
 }
-
-const RepoDetailsPage = () => <span></span>;
 
 const mapStateToProps = (state) => {
     return {

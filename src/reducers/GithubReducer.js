@@ -33,12 +33,15 @@ const GithubReducer = (state = {
 
     selectedOrg: null,
     orgSearchInvalid: false,
-    switchToOrg: null
+    switchToOrg: null,
+    repoDetails: null,
+    stargazers: []
 }, action) => {
 
     let newState = lodash.cloneDeep(state);
 
-    if (action.type.startsWith('GET_')) {
+    if (action.type.startsWith('GET_') && !action.type.startsWith(ActionTypes.GET_REPO_DETAILS) &&
+        action.type.startsWith(ActionTypes.GET_REPO_STARGAZERS)) {
         return githubLists(newState, action);
     }
 
@@ -62,7 +65,8 @@ const GithubReducer = (state = {
             window.localStorage.removeItem('accessToken');
             window.localStorage.removeItem('userName');
             break;
-        case ActionTypes.SELECT_ORG:            newState.selectedOrg = action.payload.orgName;
+        case ActionTypes.SELECT_ORG:
+            newState.selectedOrg = action.payload.orgName;
             newState.members.items = [];
             newState.members.lastSeenId = null;
             newState.members.lastPage = 1;
