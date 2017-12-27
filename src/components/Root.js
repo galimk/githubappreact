@@ -1,26 +1,31 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers, logOut} from '../actions';
+import {validateToken, loadOrgs, loadRepos, loadMembers, getRepoDetails, getRepoStargazers, logOut} from '../actions';
 import Auth from './Auth';
+import GithubList from './GithubList';
+import Dashboard from './Dashboard';
 
 class Root extends Component {
     render() {
         return (
             <Router>
                 <div className="container">
-                    <Auth logOut={this.props.logOut}
-                          authContext={this.props.authContext}
-                          validateToken={this.props.validateToken}/>
-                    <Route exact path="/" component={DashboardPage}/>
-                    <Route path="/repo-details" component={RepoDetailsPage}/>
+                    <div className="row">
+                        <Auth logOut={this.props.logOut}
+                              authContext={this.props.authContext}
+                              validateToken={this.props.validateToken}/>
+                    </div>
+                    <div className="row">
+                        <Route exact path="/" component={Dashboard}/>
+                        <Route exact path="/:org_name" component={Dashboard}/>
+                        <Route path="/repo-details" component={RepoDetailsPage}/>
+                    </div>
                 </div>
             </Router>
         );
     }
 }
-
-const DashboardPage = () => <span></span>;
 
 const RepoDetailsPage = () => <span></span>;
 
@@ -36,5 +41,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default connect(mapStateToProps, {
-    validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers, logOut
+    validateToken, loadOrgs, loadRepos, loadMembers, getRepoDetails, getRepoStargazers, logOut
 })(Root);

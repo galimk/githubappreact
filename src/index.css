@@ -8,3 +8,27 @@ body {
 .error {
   color:red;
 }
+
+.auth button {
+  width: 100%;
+}
+
+.logout-button {
+  margin-top: 15px;
+}
+
+.items-container {
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+a {
+  cursor: pointer;
+}
+
+
+img.avatar {
+  width:50px;
+  height: 50px;
+}
+

@@ -3,22 +3,25 @@ import PropTypes from 'prop-types'
 
 const Auth = ({authContext, validateToken, logOut}) => {
     const {isAuthenticated, userName, invalidToken} = authContext;
-
     if (isAuthenticated) {
-        console.log(authContext);
         return (
-            <div className="row">
-                <div className="col-md-10">
-                    <h3>Github user: {userName}</h3>
+            <section className="auth">
+                <div className="row">
+                    <div className="col-md-10">
+                        <h3>Github user: {userName}</h3>
+                    </div>
+                    <div className="col-md-2">
+                        <button type="button" onClick={() => logOut()} className="btn btn-primary logout-button">
+                            Logout
+                        </button>
+                    </div>
                 </div>
-                <div className="col-md-2">
-                    <button type="button" onClick={() => logOut()} className="btn btn-primary">Logout</button>
-                </div>
-            </div>
+                <hr />
+            </section>
         );
     } else {
         return (
-            <section>
+            <section className="auth">
                 <h3>Login to Github</h3>
                 <hr/>
                 <div className="row">
@@ -46,7 +49,6 @@ const Auth = ({authContext, validateToken, logOut}) => {
     }
 };
 
-
 Auth.propTypes = {
     authContext: PropTypes.shape({
         isAuthenticated: PropTypes.bool.isRequired,
@@ -56,6 +58,5 @@ Auth.propTypes = {
     validateToken: PropTypes.func.isRequired,
     logOut: PropTypes.func.isRequired
 };
-
 
 export default Auth;

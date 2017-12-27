@@ -8,10 +8,34 @@ const GithubReducer = (state = {
         accessToken: null,
         userName: null,
         invalidToken: false
-    }
+    },
+
+    orgs: {
+        lastSeenId: null,
+        items: [],
+        loading: false
+    },
+
+    members: {
+        lastSeenId: null,
+        items: [],
+        loading: false
+    },
+
+    repos: {
+        lastSeenId: null,
+        items: [],
+        loading: false
+    },
+
+    selectedOrg: null
 }, action) => {
 
     let newState = lodash.cloneDeep(state);
+
+    if (action.type.startsWith('GET_')) {
+        return githubLists(newState, action);
+    }
 
     switch (action.type) {
         case `${ActionTypes.VALIDATE_TOKEN}_FAILURE`:
@@ -33,6 +57,13 @@ const GithubReducer = (state = {
             window.localStorage.removeItem('accessToken');
             window.localStorage.removeItem('userName');
             break;
+        case ActionTypes.SELECT_ORG:
+            newState.selectedOrg = action.payload.orgName;
+            newState.members.items = [];
+            newState.members.lastSeenId = null;
+            newState.repos.items = [];
+            newState.repos.lastSeenId = null;
+            break;
         default:
             if (window.localStorage.getItem('accessToken') != null) {
                 newState.authContext.accessToken = window.localStorage.getItem('accessToken');
@@ -43,10 +74,33 @@ const GithubReducer = (state = {
             break;
 
     }
-
     return newState;
-
 };
 
+
+const githubLists = (newState, action) => {
+    let operationResult = action.type.split('_')[3];
+    let subject = action.type.split('_')[2].toLowerCase();
+
+
+    switch (operationResult) {
+        case "SUCCESS":
+            let items = action.data;
+            let lastSeenId = items.length == 30 ? items[items.length - 1].id : null;
+            newState[subject].lastSeenId = lastSeenId;
+            for (let item of items)
+                newState[subject].items.push(item);
+            newState[subject].loading = false;
+            break;
+        case "FAILURE":
+            break;
+        case "INIT":
+            newState[subject].loading = true;
+            break;
+    }
+
+
+    return newState;
+};
 
 export default GithubReducer;

@@ -31,10 +31,10 @@ const GithubApiService = store => next => action => {
             return fetchGitHubData(`organizations`,
                 action.payload.lastSeenId, next, ActionTypes.GET_ORGS);
         case ActionTypes.GET_REPOS:
-            return fetchGitHubData(`${action.payload.organization}/repos`,
+            return fetchGitHubData(`orgs/${action.payload.organization}/repos`,
                 action.payload.lastSeenId, next, ActionTypes.GET_REPOS);
         case ActionTypes.GET_MEMBERS:
-            return fetchGitHubData(`${action.payload.organization}/members`,
+            return fetchGitHubData(`orgs/${action.payload.organization}/members`,
                 action.payload.lastSeenId, next, ActionTypes.GET_MEMBERS);
         case ActionTypes.GET_REPO_DETAILS:
             return fetchGitHubData(`${GithubBaseUri}repos/${action.payload.owner}/${action.payload.repoName}`, null, next,
@@ -50,7 +50,11 @@ const GithubApiService = store => next => action => {
 
 
 const fetchGitHubData = (endpoint, lastSeenId, next, actionName) => {
+    next({
+        type: `${actionName}_INIT`
+    });
     return request.get(lastSeenId ? `${GithubBaseUri}${endpoint}?since=${lastSeenId}`
+
         : `${GithubBaseUri}${endpoint}`).end((err, res) => {
         if (err) {
             next({

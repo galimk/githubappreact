@@ -9,17 +9,41 @@ export const validateToken = (token) => (dispatch) => {
     });
 };
 
-export const loadOrgs = () => (dispatch) => {
+export const loadOrgs = (lastSeenId) => (dispatch) => {
     return dispatch({
-        type: ActionTypes.GET_ORGS
+        type: ActionTypes.GET_ORGS,
+        payload: {
+            lastSeenId
+        }
     });
 };
 
-export const loadRepos = (organization) => (dispatch) => {
+export const loadRepos = (lastSeenId, organization) => (dispatch) => {
     return dispatch({
         type: ActionTypes.GET_REPOS,
         payload: {
-            organization
+            organization,
+            lastSeenId
+        }
+    });
+};
+
+
+export const loadMembers = (lastSeenId, organization) => (dispatch) => {
+    return dispatch({
+        type: ActionTypes.GET_MEMBERS,
+        payload: {
+            organization,
+            lastSeenId
+        }
+    });
+};
+
+export const selectOrganization = (orgName) => (dispatch) => {
+    return dispatch({
+        type: ActionTypes.SELECT_ORG,
+        payload: {
+            orgName: orgName
         }
     });
 };
