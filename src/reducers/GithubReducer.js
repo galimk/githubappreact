@@ -13,19 +13,22 @@ const GithubReducer = (state = {
     orgs: {
         lastSeenId: null,
         items: [],
-        loading: false
+        loading: false,
+        lastPage: null
     },
 
     members: {
-        lastSeenId: null,
+        lastPage: 1,
         items: [],
-        loading: false
+        loading: false,
+        lastSeenId: null
     },
 
     repos: {
-        lastSeenId: null,
+        lastPage: 1,
         items: [],
-        loading: false
+        loading: false,
+        lastSeenId: null
     },
 
     selectedOrg: null
@@ -61,8 +64,10 @@ const GithubReducer = (state = {
             newState.selectedOrg = action.payload.orgName;
             newState.members.items = [];
             newState.members.lastSeenId = null;
+            newState.members.lastPage = 1;
             newState.repos.items = [];
             newState.repos.lastSeenId = null;
+            newState.repos.lastPage = 1;
             break;
         default:
             if (window.localStorage.getItem('accessToken') != null) {
@@ -81,13 +86,18 @@ const GithubReducer = (state = {
 const githubLists = (newState, action) => {
     let operationResult = action.type.split('_')[3];
     let subject = action.type.split('_')[2].toLowerCase();
-
-
     switch (operationResult) {
         case "SUCCESS":
             let items = action.data;
             let lastSeenId = items.length == 30 ? items[items.length - 1].id : null;
+
+            if (newState[subject].lastPage != null && lastSeenId != null) {
+                newState[subject].lastPage = newState[subject].lastPage + 1;
+            }
+
             newState[subject].lastSeenId = lastSeenId;
+
+
             for (let item of items)
                 newState[subject].items.push(item);
             newState[subject].loading = false;
@@ -98,8 +108,6 @@ const githubLists = (newState, action) => {
             newState[subject].loading = true;
             break;
     }
-
-
     return newState;
 };
 

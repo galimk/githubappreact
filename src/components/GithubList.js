@@ -17,7 +17,7 @@ const GithubList = ({items, lastSeenId, loadMore, loading, title, orgName, templ
                     <tfoot>
                     <tr>
                         {lastSeenId != null &&
-                        <td className="2">
+                        <td colSpan="2">
                             <a onClick={showMore}>Show more...</a>
                         </td>
                         }

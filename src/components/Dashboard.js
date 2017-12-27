@@ -3,10 +3,8 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {loadOrgs, loadRepos, loadMembers, selectOrganization} from '../actions';
 import GithubList from './GithubList';
-//import {BrowserHistory} from 'react-router'
 
 class Dashboard extends Component {
-
     constructor() {
         super();
 
@@ -17,6 +15,7 @@ class Dashboard extends Component {
 
     render() {
         return (
+
             <section className="dashBoard">
                 {this.props.authContext.isAuthenticated &&
                 <GithubList items={this.props.orgs.items}
@@ -32,7 +31,8 @@ class Dashboard extends Component {
                             title="Repositories"
                             orgName={this.props.selectedOrg}
                             loading={this.props.repos.loading}
-                            loadMore={(lastSeenId) => this.loadMoreRepos(lastSeenId)}
+                            loadMore={(lastSeenId) => this.props.loadRepos(this.props.repos.lastPage,
+                                this.props.selectedOrg)}
                             templateFn={this.repoItemTemplate}/>
                 }
                 {this.props.selectedOrg && this.props.authContext.isAuthenticated &&
@@ -41,20 +41,13 @@ class Dashboard extends Component {
                             title="Members"
                             loading={this.props.members.loading}
                             orgName={this.props.selectedOrg}
-                            loadMore={(lastSeenId) => this.loadMoreMembers(lastSeenId)}
+                            loadMore={(lastSeenId) => this.props.loadMembers(this.props.members.lastPage,
+                                this.props.selectedOrg)}
                             templateFn={this.memberItemTemplate}/>
                 }
             </section>
         );
     }
-
-    loadMoreRepos(lastSeenId, org) {
-        this.props.loadRepos(lastSeenId, org);
-    };
-
-    loadMoreMembers(lastSeenId, org) {
-        this.props.loadMembers(lastSeenId, org);
-    };
 
     memberItemTemplate(member) {
         return (
@@ -90,6 +83,12 @@ class Dashboard extends Component {
         this.props.history.push(`repo-details/${repo.name}/${repo.owner}`);
     }
 
+    componentDidUpdate() {
+        if (this.props.selectedOrg != this.props.match.params.org_name) {
+            this.loadSelectedOrgData();
+        }
+    }
+
     componentDidMount() {
         if (this.props.authContext.isAuthenticated) {
             this.props.loadOrgs();
@@ -98,25 +97,16 @@ class Dashboard extends Component {
         if (this.props.selectedOrg == null && this.props.match.params.org_name != null) {
             this.loadSelectedOrgData();
         }
-
-        this.props.history.listen(() => {
-            setTimeout(() => {
-                // apperantly even though listen event is triggered params on history are only updated with a timeout.
-                this.loadSelectedOrgData();
-            }, 100);
-        });
     }
 
     loadSelectedOrgData() {
-        console.log('loading repos for ' + this.props.match.params.org_name);
-
         this.props.selectOrganization(this.props.match.params.org_name);
-        this.loadMoreRepos(null, this.props.match.params.org_name);
-        this.loadMoreMembers(null, this.props.match.params.org_name);
+        this.props.loadRepos(1, this.props.match.params.org_name);
+        this.props.loadMembers(1, this.props.match.params.org_name);
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         authContext: state.GithubReducer.authContext,
         orgs: state.GithubReducer.orgs,

@@ -29,13 +29,13 @@ const GithubApiService = store => next => action => {
             });
         case ActionTypes.GET_ORGS:
             return fetchGitHubData(`organizations`,
-                action.payload.lastSeenId, next, ActionTypes.GET_ORGS);
+                action.payload.lastSeenId, next, ActionTypes.GET_ORGS, false);
         case ActionTypes.GET_REPOS:
             return fetchGitHubData(`orgs/${action.payload.organization}/repos`,
-                action.payload.lastSeenId, next, ActionTypes.GET_REPOS);
+                action.payload.page, next, ActionTypes.GET_REPOS, true);
         case ActionTypes.GET_MEMBERS:
             return fetchGitHubData(`orgs/${action.payload.organization}/members`,
-                action.payload.lastSeenId, next, ActionTypes.GET_MEMBERS);
+                action.payload.page, next, ActionTypes.GET_MEMBERS, true);
         case ActionTypes.GET_REPO_DETAILS:
             return fetchGitHubData(`${GithubBaseUri}repos/${action.payload.owner}/${action.payload.repoName}`, null, next,
                 ActionTypes.GET_REPO_DETAILS);
@@ -49,13 +49,15 @@ const GithubApiService = store => next => action => {
 };
 
 
-const fetchGitHubData = (endpoint, lastSeenId, next, actionName) => {
+const fetchGitHubData = (endpoint, param, next, actionName, byPage) => {
     next({
         type: `${actionName}_INIT`
     });
-    return request.get(lastSeenId ? `${GithubBaseUri}${endpoint}?since=${lastSeenId}`
 
-        : `${GithubBaseUri}${endpoint}`).end((err, res) => {
+    let getUri = byPage ? `${GithubBaseUri}${endpoint}?page=${param}` :
+        (param ? `${GithubBaseUri}${endpoint}?since=${param}` : `${GithubBaseUri}${endpoint}`);
+
+    return request.get(getUri).end((err, res) => {
         if (err) {
             next({
                 type: `${actionName}_FAILURE`

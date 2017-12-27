@@ -18,23 +18,23 @@ export const loadOrgs = (lastSeenId) => (dispatch) => {
     });
 };
 
-export const loadRepos = (lastSeenId, organization) => (dispatch) => {
+export const loadRepos = (page, organization) => (dispatch) => {
     return dispatch({
         type: ActionTypes.GET_REPOS,
         payload: {
             organization,
-            lastSeenId
+            page
         }
     });
 };
 
 
-export const loadMembers = (lastSeenId, organization) => (dispatch) => {
+export const loadMembers = (page, organization) => (dispatch) => {
     return dispatch({
         type: ActionTypes.GET_MEMBERS,
         payload: {
             organization,
-            lastSeenId
+            page
         }
     });
 };
