@@ -42,3 +42,9 @@ export const getRepoStargazers = (owner, repoName) => (dispatch) => {
     });
 };
 
+export const logOut = () => (dispatch) => {
+    return dispatch({
+        type: ActionTypes.LOG_OUT
+    });
+};
+

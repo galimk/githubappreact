@@ -6,8 +6,27 @@ const GithubBaseUri = 'https://api.github.com/';
 const GithubApiService = store => next => action => {
     switch (action.type) {
         case ActionTypes.VALIDATE_TOKEN:
-            return fetchGitHubData(`/user?access_toke=${action.payload.token}`,
-                null, next, ActionTypes.VALIDATE_TOKEN);
+            return request.get(`${GithubBaseUri}?access_token=${action.payload.token}`).end((err, res) => {
+                if (!err) {
+                    request.get(`${GithubBaseUri}user?access_token=${action.payload.token}`).end((err2, res2) => {
+                        if (!err2) {
+                            let data = JSON.parse(res2.text);
+                            next({
+                                type: ActionTypes.USER_NAME_SET,
+                                payload: {userName: data.login, accessToken: action.payload.token}
+                            });
+                        } else {
+                            next({
+                                type: ActionTypes.VALIDATE_TOKEN + '_FAILURE'
+                            });
+                        }
+                    });
+                } else {
+                    next({
+                        type: ActionTypes.VALIDATE_TOKEN + '_FAILURE'
+                    });
+                }
+            });
         case ActionTypes.GET_ORGS:
             return fetchGitHubData(`organizations`,
                 action.payload.lastSeenId, next, ActionTypes.GET_ORGS);

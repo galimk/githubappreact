@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 
-const Auth = ({authContext, validateToken, logout}) => {
+const Auth = ({authContext, validateToken, logOut}) => {
     const {isAuthenticated, userName, invalidToken} = authContext;
 
     if (isAuthenticated) {
+        console.log(authContext);
         return (
             <div className="row">
                 <div className="col-md-10">
                     <h3>Github user: {userName}</h3>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" onClick={logout()} class="btn btn-primary">Logout</button>
+                <div className="col-md-2">
+                    <button type="button" onClick={() => logOut()} className="btn btn-primary">Logout</button>
                 </div>
             </div>
         );
@@ -21,19 +22,17 @@ const Auth = ({authContext, validateToken, logout}) => {
                 <h3>Login to Github</h3>
                 <hr/>
                 <div className="row">
-                    <form>
-                        <div className="col-md-10">
-                            <div className="form-group">
-                                <input type="text" id="token" className="form-control" placeholder="Token"/>
-                            </div>
+                    <div className="col-md-10">
+                        <div className="form-group">
+                            <input type="text" id="token" className="form-control" placeholder="Token"/>
                         </div>
-                        <div className="col-md-2">
-                            <button type="submit"
-                                    onClick={() => validateToken(document.getElementById('token').value)}
-                                    className="btn btn-primary">Authenticate
-                            </button>
-                        </div>
-                    </form>
+                    </div>
+                    <div className="col-md-2">
+                        <button type="button"
+                                onClick={() => validateToken(document.getElementById('token').value)}
+                                className="btn btn-primary">Authenticate
+                        </button>
+                    </div>
                 </div>
                 {invalidToken &&
                 <div className="row">

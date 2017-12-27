@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers} from '../actions';
+import {validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers, logOut} from '../actions';
 import Auth from './Auth';
 
 class Root extends Component {
@@ -9,7 +9,7 @@ class Root extends Component {
         return (
             <Router>
                 <div className="container">
-                    <Auth logOut={this.logOut}
+                    <Auth logOut={this.props.logOut}
                           authContext={this.props.authContext}
                           validateToken={this.props.validateToken}/>
                     <Route exact path="/" component={DashboardPage}/>
@@ -17,11 +17,6 @@ class Root extends Component {
                 </div>
             </Router>
         );
-    }
-
-
-    logOut() {
-
     }
 }
 
@@ -41,5 +36,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default connect(mapStateToProps, {
-    validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers
+    validateToken, loadOrgs, loadRepos, getRepoDetails, getRepoStargazers, logOut
 })(Root);
