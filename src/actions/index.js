@@ -28,6 +28,14 @@ export const loadRepos = (page, organization) => (dispatch) => {
     });
 };
 
+export const searchOrganization = (orgName) => (dispatch) => {
+    return dispatch({
+        type: ActionTypes.SEARCH_ORG,
+        payload: {
+            orgName
+        }
+    });
+};
 
 export const loadMembers = (page, organization) => (dispatch) => {
     return dispatch({

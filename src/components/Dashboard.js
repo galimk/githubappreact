@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {loadOrgs, loadRepos, loadMembers, selectOrganization} from '../actions';
+import {loadOrgs, loadRepos, loadMembers, selectOrganization, searchOrganization} from '../actions';
 import GithubList from './GithubList';
+import OrganizationSearch from './OrganizationSearch';
 
 class Dashboard extends Component {
+    isAuthenticatedOnMount = false;
+
     constructor() {
         super();
 
@@ -15,8 +18,11 @@ class Dashboard extends Component {
 
     render() {
         return (
-
             <section className="dashBoard">
+                {this.props.authContext.isAuthenticated &&
+                <OrganizationSearch findOrg={this.props.searchOrganization}
+                                    orgName={this.props.selectedOrg} orgSearchInvalid={this.props.orgSearchInvalid}/> }
+
                 {this.props.authContext.isAuthenticated &&
                 <GithubList items={this.props.orgs.items}
                             lastSeenId={this.props.orgs.lastSeenId}
@@ -70,22 +76,31 @@ class Dashboard extends Component {
         return (
             <tr key={org.id}>
                 <td>{org.login}</td>
-                <td><a onClick={() => this.selectOrg(org)}>Details</a></td>
+                <td><a onClick={() => this.selectOrg(org.login)}>Details</a></td>
             </tr>
         );
     }
 
-    selectOrg(org) {
-        this.props.history.push(`${org.login}`);
+    selectOrg(orgName) {
+        this.props.history.push(`${orgName}`);
     }
 
     selectRepo(repo) {
-        this.props.history.push(`repo-details/${repo.name}/${repo.owner}`);
+        console.log(repo);
+        this.props.history.push(`repo-details/${repo.name}/${repo.owner.login}`);
     }
 
     componentDidUpdate() {
+        if (!this.isAuthenticatedOnMount && this.props.authContext.isAuthenticated) {
+            this.props.loadOrgs();
+        }
+
         if (this.props.selectedOrg != this.props.match.params.org_name) {
             this.loadSelectedOrgData();
+        }
+
+        if (this.props.switchToOrg !== null) {
+            this.selectOrg(this.props.switchToOrg);
         }
     }
 
@@ -97,6 +112,8 @@ class Dashboard extends Component {
         if (this.props.selectedOrg == null && this.props.match.params.org_name != null) {
             this.loadSelectedOrgData();
         }
+
+        this.isAuthenticatedOnMount = this.props.authContext.isAuthenticated;
     }
 
     loadSelectedOrgData() {
@@ -112,10 +129,12 @@ const mapStateToProps = (state) => {
         orgs: state.GithubReducer.orgs,
         repos: state.GithubReducer.repos,
         members: state.GithubReducer.members,
-        selectedOrg: state.GithubReducer.selectedOrg
+        selectedOrg: state.GithubReducer.selectedOrg,
+        orgSearchInvalid: state.GithubReducer.orgSearchInvalid,
+        switchToOrg: state.GithubReducer.switchToOrg
     }
 };
 
 export default withRouter(connect(mapStateToProps, {
-    loadOrgs, loadRepos, loadMembers, selectOrganization
+    loadOrgs, loadRepos, loadMembers, selectOrganization, searchOrganization
 })(Dashboard));

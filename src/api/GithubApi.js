@@ -1,5 +1,6 @@
 import request from 'superagent';
 import {ActionTypes} from '../actions/ActionTypes';
+import {push} from 'react-router-redux';
 
 const GithubBaseUri = 'https://api.github.com/';
 
@@ -42,6 +43,25 @@ const GithubApiService = store => next => action => {
         case ActionTypes.GET_REPO_STARGAZERS:
             return fetchGitHubData(`${GithubBaseUri}repos/${action.payload.owner}/${action.payload.repoName}/stargazers`, null, next,
                 ActionTypes.GET_REPO_STARGAZERS);
+        case ActionTypes.SEARCH_ORG:
+            request.get(`${GithubBaseUri}orgs/${action.payload.orgName}`).end((err, res) => {
+                if (!err) {
+
+                    next({
+                        type: ActionTypes.ORG_FOUND,
+                        payload: {
+                            orgName: JSON.parse(res.text).login
+                        }
+                    });
+
+                    store.dispatch(push(`/${JSON.parse(res.text).login}`));
+                } else {
+                    next({
+                        type: ActionTypes.ORG_NOT_FOUND
+                    })
+                }
+            });
+            break;
         default:
             return next(action);
 

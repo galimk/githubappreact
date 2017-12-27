@@ -10,5 +10,9 @@ export const ActionTypes = {
     USER_NAME_SET: 'USER_NAME_SET',
     LOG_OUT: 'LOG_OUT',
 
-    SELECT_ORG: 'SELECT_ORG'
+    SELECT_ORG: 'SELECT_ORG',
+
+    SEARCH_ORG: 'SEARCH_ORG',
+    ORG_NOT_FOUND: 'ORG_NOT_FOUND',
+    ORG_FOUND: 'ORG_FOUND'
 };

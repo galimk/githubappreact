@@ -31,7 +31,9 @@ const GithubReducer = (state = {
         lastSeenId: null
     },
 
-    selectedOrg: null
+    selectedOrg: null,
+    orgSearchInvalid: false,
+    switchToOrg: null
 }, action) => {
 
     let newState = lodash.cloneDeep(state);
@@ -60,14 +62,25 @@ const GithubReducer = (state = {
             window.localStorage.removeItem('accessToken');
             window.localStorage.removeItem('userName');
             break;
-        case ActionTypes.SELECT_ORG:
-            newState.selectedOrg = action.payload.orgName;
+        case ActionTypes.SELECT_ORG:            newState.selectedOrg = action.payload.orgName;
             newState.members.items = [];
             newState.members.lastSeenId = null;
             newState.members.lastPage = 1;
             newState.repos.items = [];
             newState.repos.lastSeenId = null;
             newState.repos.lastPage = 1;
+            newState.orgSearchInvalid = false;
+            newState.foundOrg = null;
+            newState.switchToOrg = null;
+            break;
+        case ActionTypes.ORG_FOUND:
+            if (newState.selectedOrg !== action.payload.orgName) {
+                newState.switchToOrg = action.payload.orgName;
+            }
+            newState.orgSearchInvalid = false;
+            break;
+        case ActionTypes.ORG_NOT_FOUND:
+            newState.orgSearchInvalid = true
             break;
         default:
             if (window.localStorage.getItem('accessToken') != null) {

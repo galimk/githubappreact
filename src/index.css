@@ -32,3 +32,27 @@ img.avatar {
   height: 50px;
 }
 
+
+
+.info-panel {
+  margin-bottom: 25px;
+}
+
+.info-panel-organization {
+  color:green;
+}
+
+
+.search-box {
+  float:left;
+  width:270px;
+}
+
+.search-button {
+  float: right;
+  width: 90px;
+}
+
+.search-panel {
+  margin-bottom: 25px;
+}
