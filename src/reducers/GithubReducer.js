@@ -41,7 +41,7 @@ const GithubReducer = (state = {
     let newState = lodash.cloneDeep(state);
 
     if (action.type.startsWith('GET_') && !action.type.startsWith(ActionTypes.GET_REPO_DETAILS) &&
-        action.type.startsWith(ActionTypes.GET_REPO_STARGAZERS)) {
+        !action.type.startsWith(ActionTypes.GET_REPO_STARGAZERS)) {
         return githubLists(newState, action);
     }
 

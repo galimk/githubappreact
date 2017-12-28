@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 const GithubList = ({items, lastSeenId, loadMore, loading, title, orgName, templateFn}) => {
     return (
+
         <div className="col-md-4">
             <h4>
                 {title} {loading && <span>(loading...)</span>} {orgName}
