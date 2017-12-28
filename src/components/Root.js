@@ -25,7 +25,7 @@ class Root extends Component {
                         <div className="row">
                             <Route exact path="/" component={Dashboard}/>
                             <Route exact path="/:org_name" component={Dashboard}/>
-
+                            <Route exact path="/repo-details/:repo_name/:owner_name" component={RepoDetails}/>
                         </div>
                     </div>
                 </ConnectedRouter>

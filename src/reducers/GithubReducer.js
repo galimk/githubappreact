@@ -34,18 +34,23 @@ const GithubReducer = (state = {
     selectedOrg: null,
     orgSearchInvalid: false,
     switchToOrg: null,
-    repoDetails: null,
+    repo: null,
     stargazers: []
 }, action) => {
 
     let newState = lodash.cloneDeep(state);
 
-    if (action.type.startsWith('GET_') && !action.type.startsWith(ActionTypes.GET_REPO_DETAILS) &&
-        !action.type.startsWith(ActionTypes.GET_REPO_STARGAZERS)) {
+    if (action.type.startsWith('GET_') && !action.type.startsWith(ActionTypes.GET_REPO_DETAILS) && !action.type.startsWith(ActionTypes.GET_REPO_STARGAZERS)) {
         return githubLists(newState, action);
     }
 
     switch (action.type) {
+        case `${ActionTypes.GET_REPO_STARGAZERS}_SUCCESS`:
+           newState.stargazers = action.data;
+            break;
+        case `${ActionTypes.GET_REPO_DETAILS}_SUCCESS`:
+            newState.repo = action.data;
+            break;
         case `${ActionTypes.VALIDATE_TOKEN}_FAILURE`:
             newState.authContext.invalidToken = true;
             break;

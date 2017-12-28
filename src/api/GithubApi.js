@@ -38,10 +38,10 @@ const GithubApiService = store => next => action => {
             return fetchGitHubData(`orgs/${action.payload.organization}/members`,
                 action.payload.page, next, ActionTypes.GET_MEMBERS, true);
         case ActionTypes.GET_REPO_DETAILS:
-            return fetchGitHubData(`${GithubBaseUri}repos/${action.payload.owner}/${action.payload.repoName}`, null, next,
+            return fetchGitHubData(`repos/${action.payload.owner}/${action.payload.repoName}`, null, next,
                 ActionTypes.GET_REPO_DETAILS);
         case ActionTypes.GET_REPO_STARGAZERS:
-            return fetchGitHubData(`${GithubBaseUri}repos/${action.payload.owner}/${action.payload.repoName}/stargazers`, null, next,
+            return fetchGitHubData(`repos/${action.payload.owner}/${action.payload.repoName}/stargazers`, null, next,
                 ActionTypes.GET_REPO_STARGAZERS);
         case ActionTypes.SEARCH_ORG:
             request.get(`${GithubBaseUri}orgs/${action.payload.orgName}`).end((err, res) => {
